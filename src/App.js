@@ -1,5 +1,5 @@
 import React from "react";
-import Counter from "./Counter.js";
+// import Counter from "./Counter.js";
 import InputSample from "./InputSample.js";
 
 function App() {
