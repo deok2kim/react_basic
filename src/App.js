@@ -39,15 +39,6 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
-    // case "CHANGE_INPUT":
-    //   return {
-    //     ...state,
-    //     inputs: {
-    //       ...state.inputs,
-    //       [action.name]: action.value,
-    //     },
-    //   };
-
     case "CREATE_USER":
       return {
         users: [...state.users, action.user],
@@ -68,6 +59,8 @@ function reducer(state, action) {
   }
 }
 
+export const UserDispatch = React.createContext(null);
+
 function App() {
   const [{ username, email }, onChange, reset] = useInputs({
     username: "",
@@ -76,17 +69,6 @@ function App() {
 
   const [state, dispatch] = useReducer(reducer, initialState);
   const { users } = state;
-  // const { username, email } = state.inputs;
-
-  // const onChange = useCallback((e) => {
-  //   const { name, value } = e.target;
-  //   dispatch({
-  //     type: "CHANGE_INPUT",
-  //     name,
-  //     value,
-  //     active: false,
-  //   });
-  // }, []);
 
   const nextId = useRef(initialState.users.length + 1);
   const onCreate = useCallback(() => {
@@ -102,33 +84,19 @@ function App() {
     nextId.current += 1;
   }, [username, email, reset]);
 
-  const onRemove = useCallback((id) => {
-    dispatch({
-      type: "REMOVE_USER",
-      id,
-    });
-  }, []);
-
-  const onToggle = useCallback((id) => {
-    dispatch({
-      type: "TOGGLE_USER",
-      id,
-    });
-  }, []);
-
   const count = useMemo(() => countActiveUsers(users), [users]);
 
   return (
-    <>
+    <UserDispatch.Provider value={dispatch}>
       <CreateUser
         username={username}
         email={email}
         onChange={onChange}
         onCreate={onCreate}
       />
-      <UserList users={users} onRemove={onRemove} onToggle={onToggle} />
+      <UserList users={users} />
       <div>활성 사용자 수: {count}</div>
-    </>
+    </UserDispatch.Provider>
   );
 }
 
