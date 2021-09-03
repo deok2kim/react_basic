@@ -2,13 +2,14 @@ import { useState, useCallback } from "react";
 
 function useInputs(initialForm) {
   const [form, setForm] = useState(initialForm);
+
   // change
   const onChange = useCallback((e) => {
     const { name, value } = e.target;
     setForm((form) => ({ ...form, [name]: value }));
   }, []);
-  // reset
 
+  // reset
   const reset = useCallback(() => {
     setForm(initialForm);
     console.log("리셋", initialForm);
