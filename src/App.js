@@ -1,6 +1,7 @@
 import React, { useMemo, useReducer } from "react";
 import UserList from "./UserList";
 import CreateUser from "./CreateUser";
+import produce from "immer";
 
 function countActiveUsers(users) {
   console.log("활성 사용자 수를 세는 중...");
@@ -46,11 +47,10 @@ function reducer(state, action) {
         users: state.users.filter((user) => user.id !== action.id),
       };
     case "TOGGLE_USER":
-      return {
-        users: state.users.map((user) =>
-          user.id === action.id ? { ...user, active: !user.active } : user
-        ),
-      };
+      return produce(state, (draft) => {
+        const user = draft.users.find((user) => user.id === action.id);
+        user.active = !user.active;
+      });
     default:
       return state;
   }
